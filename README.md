@@ -1,3 +1,60 @@
 # 나의 노트
-저의 생각을 적은 노트입니다.  
-시간이 지나면서 제 생각이 바뀌는 것 처럼, 노트의 내용은 변경될 수 있습니다.  
+
+md 파일을 정적 위키 사이트로 만든다. 런타임 의존성 없음.
+
+## 빌드
+
+    node build.js        # → dist/
+
+Node 18+ 만 필요하다. npm 패키지 없음.
+
+## 구조
+
+    site.json            사이트 제목·주제(폴더) 목록·노트 순서·slug
+    programming/*.md     노트 원본 — 유일한 원천
+    ai-agent/*.md
+    investment/*.md
+    build.js             md 읽기 → 파싱 → dist/ 출력
+    site/md.js           마크다운 파서 (프론트매터·표·중첩 리스트·백링크용 링크 수집)
+    site/collect.js      md 수집·정렬 (한글 파일명 NFC 정규화)
+    site/render.js       AST → HTML, 페이지 레이아웃
+    site/style.css       스타일 (다크 기본 / 라이트 토글)
+    site/app.js          테마 토글 + 클라이언트 검색
+    test/                단위 테스트 — npm test
+    dist/                배포물. Pages 로 올리므로 커밋한다
+
+노트를 추가할 때는 폴더에 md 를 넣기만 하면 된다. `build.js` 가 폴더를 훑어
+자동으로 잡는다. 목록 맨 앞에 고정하고 싶을 때만 `site.json` 의 `order` 에 적는다.
+
+## 노트 쓰는 규칙
+
+- \`# 제목\` 한 줄이 노트 제목. \`# 제목 - 부제\` 로 쓰면 뒤가 부제.
+- \`# 제목 (English Title)\` 의 괄호는 원제로 따로 표시된다.
+- H1 위에 URL 을 한 줄 두면 출처로 잡는다. "번역" 이라는 말이 있으면 번역 표시.
+- 파일명 앞의 \`YYYY-MM-DD-\` 는 날짜로 쓰인다.
+- 한글 파일명은 `site.json` 의 `slugs` 에 `"경로": "ascii-name"` 으로 URL 을 정해준다. 프론트매터 `slug:` 도 된다.
+- 노트끼리 링크할 때 GitHub blob URL 을 그대로 붙여도 내부 링크로 바뀐다. \`[글](../ai-agent/x.md)\` 도 된다.
+- 링크된 쪽 노트 하단에 백링크가 자동으로 생긴다.
+
+프론트매터로 덮어쓸 수 있는 것:
+
+    ---
+    summary: 홈 목록에 쓸 한 줄
+    subtitle: 제목 아래 부제
+    date: 2026-07-19
+    source: https://...
+    ---
+
+## 배포 (GitHub Pages)
+
+`dist/` 를 커밋해서 올린다. 노트를 고친 뒤:
+
+    node build.js
+    git add -A && git commit && git push
+
+GitHub 저장소 Settings → Pages 에서 소스를 `main` 브랜치 `/dist` 로 지정한다.
+
+## 남은 일
+
+- 고침 날짜·편집 횟수를 git 커밋 이력에서 채우기 (지금은 파일명 날짜만)
+- 태그 인덱스
