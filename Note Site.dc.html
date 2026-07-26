@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; }
+  a { color: inherit; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; --bg:{{bg}}; --panel:{{panel}}; --text:{{text}}; --muted:{{muted}}; --rule:{{rule}}; --link:{{link}}; --seed:{{accent}}; background:var(--bg,#fcfcfa); color:var(--text,#1b1a17); font-family:'Noto Sans KR', Helvetica, sans-serif;">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px 40px; border-bottom:1px solid var(--rule,#e2e0d8); position:sticky; top:0; background:var(--bg,#fcfcfa); z-index:5;">
+    <div style="display:flex; align-items:baseline; gap:16px;">
+      <a href="#/" style="font-family:'Noto Serif KR', serif; font-size:17px; font-weight:600; text-decoration:none;">나의 노트</a>
+      <nav style="display:flex; gap:14px; font-family:'IBM Plex Mono', monospace; font-size:12px;">
+        <a href="#/" style="color:var(--link,#2f5aa8); text-decoration:none;">주제</a>
+        <a href="#/changes" style="color:var(--link,#2f5aa8); text-decoration:none;">최근 변경</a>
+      </nav>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <input value="{{q}}" onInput="{{onSearch}}" placeholder="검색 — 제목·본문" style="font-family:'Noto Sans KR', sans-serif; font-size:13px; padding:7px 11px; width:230px; min-width:0; background:transparent; color:var(--text,#1b1a17); border:1px solid var(--rule,#e2e0d8); outline:none;">
+      <button onClick="{{toggleTheme}}" style="font-family:'IBM Plex Mono', monospace; font-size:12px; padding:7px 11px; white-space:nowrap; flex-shrink:0; background:transparent; color:var(--muted,#6f6b62); border:1px solid var(--rule,#e2e0d8); cursor:pointer;" style-hover="color:var(--text,#1b1a17); border-color:var(--muted,#6f6b62);">{{themeLabel}}</button>
+    </div>
+  </header>
+
+  <sc-if value="{{loading}}" hint-placeholder-val="{{true}}">
+    <p style="padding:64px 40px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted,#6f6b62);">md 읽는 중…</p>
+  </sc-if>
+
+  <sc-if value="{{isSearch}}">
+    <div style="max-width:760px; padding:48px 40px 72px;">
+      <p style="margin:0 0 22px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted,#6f6b62);">{{searchSummary}}</p>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{results}}" as="r" hint-placeholder-count="3">
+          <a href="{{r.href}}" style="display:flex; flex-direction:column; gap:5px; padding:16px 0; border-top:1px solid var(--rule,#e2e0d8); text-decoration:none;">
+            <span style="display:flex; align-items:baseline; gap:9px;">
+              <span style="font-family:'Noto Serif KR', serif; font-size:17px; color:var(--link,#2f5aa8);">{{r.title}}</span>
+              <span style="font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--muted,#6f6b62);">{{r.folderLabel}}</span>
+            </span>
+            <span style="font-size:14px; line-height:1.7; color:var(--muted,#6f6b62);">{{r.excerpt}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isHome}}">
+    <div style="max-width:760px; padding:64px 40px 80px;">
+      <p style="margin:0 0 10px; max-width:44ch; font-family:'Noto Serif KR', serif; font-size:18px; line-height:1.8; color:var(--muted,#6f6b62); text-wrap:pretty;">{{tagline}}</p>
+      <p style="margin:0; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted,#6f6b62);">{{repoLine}}</p>
+      <div style="display:flex; flex-direction:column; gap:44px; margin-top:48px; padding-top:40px; border-top:1px solid var(--rule,#e2e0d8);">
+        <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:baseline; gap:10px;">
+              <h2 style="margin:0; font-family:'Noto Serif KR', serif; font-size:20px; font-weight:600;">{{g.label}}</h2>
+              <span style="font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted,#6f6b62);">{{g.meta}}</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{g.notes}}" as="n" hint-placeholder-count="4">
+                <a href="{{n.href}}" style="display:flex; flex-direction:column; gap:3px; text-decoration:none;">
+                  <span style="display:flex; align-items:baseline; gap:9px;">
+                    <span style="font-size:16px; color:var(--link,#2f5aa8);">{{n.title}}</span>
+                    <span style="font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.1em; color:var(--muted,#6f6b62);">{{n.badge}}</span>
+                  </span>
+                  <span style="font-size:14px; line-height:1.65; color:var(--muted,#6f6b62);">{{n.summary}}</span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isChanges}}">
+    <div style="max-width:760px; padding:56px 40px 80px;">
+      <h1 style="margin:0 0 8px; font-family:'Noto Serif KR', serif; font-size:26px; font-weight:600;">최근 변경</h1>
+      <p style="margin:0 0 30px; max-width:46ch; font-size:14px; line-height:1.7; color:var(--muted,#6f6b62);">지금은 파일명의 날짜 접두어만 씁니다. 실제 고침 이력은 git 커밋에서 채워야 합니다.</p>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{changes}}" as="c" hint-placeholder-count="6">
+          <a href="{{c.href}}" style="display:grid; grid-template-columns:92px 1fr auto; gap:14px; align-items:baseline; padding:12px 0; border-top:1px solid var(--rule,#e2e0d8); text-decoration:none;">
+            <span style="font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted,#6f6b62);">{{c.date}}</span>
+            <span style="font-size:16px; color:var(--link,#2f5aa8);">{{c.title}}</span>
+            <span style="font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted,#6f6b62);">{{c.folderLabel}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isNote}}">
+    <div style="display:grid; grid-template-columns:236px minmax(0,64ch); gap:0 52px; padding:44px 40px 96px; align-items:start;">
+      <aside style="display:flex; flex-direction:column; gap:7px; padding-top:16px; position:sticky; top:86px;">
+        <a href="#/" style="font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--link,#2f5aa8); text-decoration:none; margin-bottom:14px;">← {{folderLabel}}</a>
+        <span style="font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted,#6f6b62); margin-bottom:4px;">Contents</span>
+        <sc-for list="{{toc}}" as="h" hint-placeholder-count="5">
+          <a href="{{h.href}}" style="font-size:13px; line-height:1.6; color:var(--muted,#6f6b62); text-decoration:none;" style-hover="color:var(--text,#1b1a17);">{{h.text}}</a>
+        </sc-for>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-top:24px; padding-top:18px; border-top:1px solid var(--rule,#e2e0d8); font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted,#6f6b62); line-height:1.7;">
+          <span>{{stat1}}</span>
+          <span>{{stat2}}</span>
+        </div>
+      </aside>
+
+      <article style="display:flex; flex-direction:column; gap:20px; min-width:0;">
+        <h1 style="margin:0; font-family:'Noto Serif KR', serif; font-size:33px; font-weight:600; line-height:1.4; letter-spacing:-0.015em;">{{title}}</h1>
+        <sc-if value="{{titleOriginal}}">
+          <p style="margin:-14px 0 0; font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.04em; color:var(--muted,#6f6b62);">{{titleOriginal}}</p>
+        </sc-if>
+        <sc-if value="{{subtitle}}">
+          <p style="margin:0; font-family:'Noto Serif KR', serif; font-size:19px; line-height:1.75; color:var(--muted,#6f6b62); text-wrap:pretty;">{{subtitle}}</p>
+        </sc-if>
+        <sc-if value="{{hasSource}}">
+          <div style="display:flex; flex-direction:column; gap:6px; padding:14px 18px; background:var(--panel,#f4f3ee); border-left:2px solid var(--seed,#a8683a);">
+            <span style="font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--seed,#a8683a);">{{sourceKind}}</span>
+            <span style="font-size:14px; line-height:1.7; color:var(--muted,#6f6b62);">{{sourceNote}}</span>
+            <a href="{{sourceUrl}}" target="_blank" style="font-family:'IBM Plex Mono', monospace; font-size:12px; line-height:1.7; color:var(--link,#2f5aa8); text-decoration:none;">{{sourceLabel}} ↗</a>
+          </div>
+        </sc-if>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">{{body}}</div>
+
+        <sc-if value="{{hasBacklinks}}">
+          <div style="display:flex; flex-direction:column; gap:9px; margin-top:34px; padding-top:22px; border-top:1px solid var(--rule,#e2e0d8);">
+            <span style="font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted,#6f6b62);">이 노트를 참조한 노트</span>
+            <sc-for list="{{backlinks}}" as="b" hint-placeholder-count="2">
+              <a href="{{b.href}}" style="font-size:15px; line-height:1.9; color:var(--link,#2f5aa8); text-decoration:none;">{{b.title}}</a>
+            </sc-for>
+          </div>
+        </sc-if>
+      </article>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;테마&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;oklch(0.55 0.11 45)&quot;,&quot;options&quot;:[&quot;oklch(0.55 0.11 45)&quot;,&quot;oklch(0.5 0.11 150)&quot;,&quot;oklch(0.5 0.12 300)&quot;,&quot;oklch(0.5 0.05 250)&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;테마&quot;}}">
+class Component extends DCLogic {
+  state = { dark: null, notes: null, site: null, folders: [], route: this.parseHash(), q: "", error: "" };
+
+  parseHash() {
+    const h = (location.hash || "#/").replace(/^#/, "");
+    if (h.startsWith("/note/")) return { view: "note", path: decodeURIComponent(h.slice(6)) };
+    if (h.startsWith("/changes")) return { view: "changes" };
+    return { view: "home" };
+  }
+
+  componentDidMount() {
+    this.onHash = () => this.setState({ route: this.parseHash(), q: "" });
+    window.addEventListener("hashchange", this.onHash);
+    this.load();
+  }
+  componentWillUnmount() { window.removeEventListener("hashchange", this.onHash); }
+
+  async load() {
+    try {
+      this.md = await import("./md.js");
+      const cfg = await (await fetch("notes.json")).json();
+      const notes = {};
+      await Promise.all(cfg.notes.map(async (p) => {
+        const res = await fetch(p.split("/").map(encodeURIComponent).join("/"));
+        if (!res.ok) return;
+        const src = await res.text();
+        const note = this.md.parseNote(p, src);
+        note.text = this.md.blocksToText(note.blocks);
+        notes[p] = note;
+      }));
+      cfg.notes.forEach((p, i) => { if (notes[p]) notes[p].order = i; });
+      const back = {};
+      Object.values(notes).forEach((n) => n.links.forEach((t) => {
+        if (!back[t]) back[t] = [];
+        if (!back[t].includes(n.path)) back[t].push(n.path);
+      }));
+      Object.values(notes).forEach((n) => { n.backlinks = back[n.path] || []; });
+      this.setState({ notes, site: cfg.site, folders: cfg.folders });
+    } catch (e) {
+      this.setState({ error: String(e && e.message || e) });
+    }
+  }
+
+  href(p) { return "#/note/" + encodeURIComponent(p); }
+
+  // ---- AST → React ----
+  inline(nodes, key) {
+    const R = React;
+    return (nodes || []).map((n, i) => {
+      const k = key + "-" + i;
+      if (n.t === "text") return n.v;
+      if (n.t === "br") return R.createElement("br", { key: k });
+      if (n.t === "strong") return R.createElement("strong", { key: k, style: { fontWeight: 600 } }, this.inline(n.c, k));
+      if (n.t === "em") return R.createElement("em", { key: k }, this.inline(n.c, k));
+      if (n.t === "code") return R.createElement("code", { key: k, style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: "0.86em", background: "var(--panel,#f4f3ee)", padding: "1px 5px" } }, n.v);
+      if (n.t === "link") {
+        const internal = n.internal && this.state.notes && this.state.notes[n.href];
+        return R.createElement("a", {
+          key: k,
+          href: n.internal ? (internal ? this.href(n.href) : "#/") : n.href,
+          target: n.internal ? undefined : "_blank",
+          style: internal
+            ? { color: "var(--link,#2f5aa8)", textDecoration: "none", borderBottom: "1px solid var(--rule,#e2e0d8)" }
+            : { color: "var(--muted,#6f6b62)", textDecoration: "none", borderBottom: "1px dotted var(--rule,#e2e0d8)" },
+        }, this.inline(n.c, k), n.internal ? null : " ↗");
+      }
+      return null;
+    });
+  }
+
+  items(list, key) {
+    const R = React;
+    return list.map((it, i) => R.createElement("li", { key: key + "-" + i, style: { marginBottom: 4 } },
+      this.inline(it.inline, key + "-" + i),
+      it.children && it.children.length
+        ? R.createElement("ul", { style: { margin: "6px 0 2px", paddingLeft: 20, listStyle: "circle" } }, this.items(it.children, key + "-" + i + "c"))
+        : null));
+  }
+
+  block(b, i) {
+    const R = React;
+    const serif = "'Noto Serif KR', serif";
+    const k = "b" + i;
+    if (b.type === "heading") {
+      const size = b.level === 2 ? 21 : b.level === 3 ? 17 : 15;
+      return R.createElement(b.level === 2 ? "h2" : b.level === 3 ? "h3" : "h4",
+        { key: k, id: b.id, style: { margin: "18px 0 0", fontFamily: serif, fontSize: size, fontWeight: 600, lineHeight: 1.45, scrollMarginTop: 96 } },
+        this.inline(b.inline, k));
+    }
+    if (b.type === "p") return R.createElement("p", { key: k, style: { margin: 0, fontFamily: serif, fontSize: 18, lineHeight: 1.95, textWrap: "pretty" } }, this.inline(b.inline, k));
+    if (b.type === "ul" || b.type === "ol") return R.createElement(b.type === "ol" ? "ol" : "ul",
+      { key: k, style: { margin: 0, paddingLeft: 22, fontFamily: serif, fontSize: 18, lineHeight: 1.75 } }, this.items(b.items, k));
+    if (b.type === "quote") return R.createElement("blockquote",
+      { key: k, style: { margin: 0, padding: "2px 0 2px 20px", borderLeft: "2px solid var(--seed,#a8683a)", display: "flex", flexDirection: "column", gap: 10, color: "var(--muted,#6f6b62)" } },
+      b.blocks.map((c, j) => this.block(c, i + "-" + j)));
+    if (b.type === "code") return R.createElement("pre",
+      { key: k, style: { margin: 0, padding: "16px 18px", background: "var(--panel,#f4f3ee)", overflowX: "auto", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, lineHeight: 1.65 } },
+      R.createElement("code", null, b.code));
+    if (b.type === "hr") return R.createElement("hr", { key: k, style: { margin: "10px 0", border: 0, borderTop: "1px solid var(--rule,#e2e0d8)" } });
+    if (b.type === "table") {
+      const cell = (extra) => Object.assign({ padding: "9px 12px", borderBottom: "1px solid var(--rule,#e2e0d8)", textAlign: "left", verticalAlign: "top", fontSize: 14, lineHeight: 1.6 }, extra);
+      return R.createElement("div", { key: k, style: { overflowX: "auto" } },
+        R.createElement("table", { style: { borderCollapse: "collapse", width: "100%", fontFamily: "'Noto Sans KR', sans-serif" } },
+          R.createElement("thead", null, R.createElement("tr", null, b.head.map((c, j) =>
+            R.createElement("th", { key: j, style: cell({ fontWeight: 500, fontSize: 12, letterSpacing: "0.04em", color: "var(--muted,#6f6b62)", borderBottomColor: "var(--muted,#6f6b62)" }) }, this.inline(c, k + "h" + j))))),
+          R.createElement("tbody", null, b.rows.map((r, ri) =>
+            R.createElement("tr", { key: ri }, r.map((c, ci) => R.createElement("td", { key: ci, style: cell() }, this.inline(c, k + "r" + ri + ci))))))));
+    }
+    return null;
+  }
+
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? false);
+    const accent = this.props.accent ?? (dark ? "oklch(0.76 0.1 55)" : "oklch(0.55 0.11 45)");
+    const theme = dark
+      ? { bg: "#131311", panel: "#1a1a17", text: "#e7e5de", muted: "#98938a", rule: "#2e2d29", link: "oklch(0.79 0.08 245)" }
+      : { bg: "#fcfcfa", panel: "#f4f3ee", text: "#1b1a17", muted: "#6f6b62", rule: "#e2e0d8", link: "oklch(0.47 0.1 250)" };
+    const base = {
+      ...theme, accent,
+      themeLabel: dark ? "라이트" : "다크",
+      toggleTheme: () => this.setState({ dark: !dark }),
+      q: this.state.q,
+      onSearch: (e) => this.setState({ q: e.target.value }),
+    };
+
+    const notes = this.state.notes;
+    if (!notes) return { ...base, loading: true };
+
+    const label = (dir) => (this.state.folders.find((f) => f.dir === dir) || {}).label || dir;
+    const all = Object.values(notes).sort((a, b) => a.order - b.order);
+    const q = this.state.q.trim();
+
+    if (q) {
+      const hits = all.map((n) => {
+        const inTitle = n.title.toLowerCase().includes(q.toLowerCase());
+        const idx = n.text.toLowerCase().indexOf(q.toLowerCase());
+        if (!inTitle && idx < 0) return null;
+        return {
+          href: this.href(n.path), title: n.title, folderLabel: label(n.folder),
+          excerpt: idx >= 0 ? "…" + n.text.slice(Math.max(0, idx - 40), idx + 90).replace(/\n/g, " ") + "…" : n.summary,
+        };
+      }).filter(Boolean);
+      return { ...base, isSearch: true, results: hits, searchSummary: "“" + q + "” — 노트 " + hits.length + "건" };
+    }
+
+    const route = this.state.route;
+    if (route.view === "note" && notes[route.path]) {
+      const n = notes[route.path];
+      return {
+        ...base, isNote: true,
+        title: n.title, titleOriginal: n.titleOriginal, subtitle: n.subtitle,
+        folderLabel: label(n.folder),
+        hasSource: !!n.source,
+        sourceKind: n.source ? (n.source.translation ? "번역" : "출처") : "",
+        sourceNote: n.source ? n.source.note : "",
+        sourceUrl: n.source ? n.source.url : "",
+        sourceLabel: n.source ? n.source.label : "",
+        toc: n.toc.map((h) => ({ href: "#" + h.id, text: (h.level === 3 ? "· " : "") + h.text })),
+        stat1: (n.date ? n.date + " · " : "") + "읽기 " + n.minutes + "분",
+        stat2: "나가는 링크 " + n.links.length + " · 백링크 " + n.backlinks.length,
+        body: n.blocks.map((b, i) => this.block(b, i)),
+        hasBacklinks: n.backlinks.length > 0,
+        backlinks: n.backlinks.map((p) => ({ href: this.href(p), title: notes[p].title })),
+      };
+    }
+
+    if (route.view === "changes") {
+      const changes = all.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""))
+        .map((n) => ({ href: this.href(n.path), title: n.title, date: n.date || "날짜 없음", folderLabel: label(n.folder) }));
+      return { ...base, isChanges: true, changes };
+    }
+
+    const groups = this.state.folders.map((f) => {
+      const list = all.filter((n) => n.folder === f.dir);
+      return {
+        label: f.label,
+        meta: f.dir + " · " + list.length,
+        notes: list.map((n) => ({
+          href: this.href(n.path), title: n.title, summary: n.summary,
+          badge: n.source && n.source.translation ? "번역" : "",
+        })),
+      };
+    }).filter((g) => g.notes.length);
+
+    return {
+      ...base, isHome: true, groups,
+      tagline: this.state.site.tagline,
+      repoLine: this.state.site.repo + " · 노트 " + all.length + "편",
+    };
+  }
+}
+</script>
+</body>
+</html>
