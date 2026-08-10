@@ -10,9 +10,15 @@ export function noteUrl(note) {
   return ['notes', ...dir.split('/'), name + '.html'].map(encodeURIComponent).join('/');
 }
 
-// 위키 문서 하나의 경로. 문서 이름이 곧 URL 이다 — 폴더도 날짜도 없다.
+// 위키 문서의 주소. 이름이 곧 주소다 — 폴더도 날짜도 확장자도 슬래시도 없다.
+// GitHub Pages 가 <이름>.html 을 리다이렉트 없이 내주므로 이렇게 쓸 수 있다.
 export function wikiUrl(name) {
-  return encodeURIComponent(name) + '/';
+  return encodeURIComponent(name);
+}
+
+// 그 주소가 실제로 가리키는 파일.
+export function wikiFile(name) {
+  return name + '.html';
 }
 
 // 내부 링크는 md 경로 → 실제 페이지 경로로. 대상이 없으면 링크를 풀어 텍스트로 남긴다.
@@ -90,7 +96,7 @@ function shell({ title, site, base, body, bodyClass = '' }) {
     <a class="brand" href="${base}index.html">${esc(site.title)}</a>
     <nav>
       <a href="${base}index.html">주제</a>
-      <a href="${base}wiki/">위키</a>
+      <a href="${base}wiki.html">위키</a>
       <a href="${base}changes.html">최근 변경</a>
     </nav>
   </div>
@@ -207,7 +213,7 @@ export function renderWikiDoc({ site, doc, ctx, base, backlinks, outgoing }) {
   return shell({
     title: doc.name + ' · ' + site.title, site, base, bodyClass: 'note-page',
     body: `<aside class="rail">
-  <a class="mono back" href="${base}wiki/">← 위키</a>
+  <a class="mono back" href="${base}wiki.html">← 위키</a>
   ${toc ? '<span class="kicker">Contents</span><nav class="toc">' + toc + '</nav>' : ''}
   <div class="stats mono">
     <span>이 문서를 가리키는 곳 ${backlinks.length}</span>

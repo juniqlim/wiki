@@ -7,28 +7,28 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="style.css">
 <script>try{if(localStorage.getItem('theme')==='light')delete document.documentElement.dataset.theme}catch(e){}</script>
 </head>
 <body class="note-page">
 <header class="site-head">
   <div class="head-left">
-    <a class="brand" href="../index.html">나의 위키</a>
+    <a class="brand" href="index.html">나의 위키</a>
     <nav>
-      <a href="../index.html">주제</a>
-      <a href="../wiki/">위키</a>
-      <a href="../changes.html">최근 변경</a>
+      <a href="index.html">주제</a>
+      <a href="wiki.html">위키</a>
+      <a href="changes.html">최근 변경</a>
     </nav>
   </div>
   <div class="head-right">
-    <input id="q" type="search" placeholder="검색 — 제목·본문" autocomplete="off" data-base="../">
+    <input id="q" type="search" placeholder="검색 — 제목·본문" autocomplete="off" data-base="">
     <button id="theme" type="button">라이트</button>
   </div>
 </header>
 <div id="search-results" hidden></div>
 <main id="page">
 <aside class="rail">
-  <a class="mono back" href="../wiki/">← 위키</a>
+  <a class="mono back" href="wiki.html">← 위키</a>
   <span class="kicker">Contents</span><nav class="toc"><a class="toc-2" href="#이름이-곧-주소다">이름이 곧 주소다</a><a class="toc-2" href="#서로를-부른다">서로를 부른다</a><a class="toc-2" href="#고쳐-쓴다">고쳐 쓴다</a></nav>
   <div class="stats mono">
     <span>이 문서를 가리키는 곳 0</span>
@@ -42,7 +42,7 @@
 <h2 id="이름이-곧-주소다">이름이 곧 주소다</h2>
 <p>파일 이름이 문서 이름이고, 그대로 URL 이 된다. <code>wiki/위키쓰는법.md</code> 는 <code>/위키쓰는법</code> 이 된다. 폴더도 날짜도 붙이지 않는다. 위키 문서는 쓴 날이 아니라 지금 무엇을 말하는지가 전부이기 때문이다.</p>
 <h2 id="서로를-부른다">서로를 부른다</h2>
-<p><code>[[이름]]</code> 으로 다른 문서를 부른다. 아직 없는 문서를 불러도 된다 — 오히려 그게 정상이다. 없는 문서는 다르게 표시되고, <a class="wiki new" href="../%EC%9C%84%ED%82%A4%EB%AA%A9%EB%A1%9D/">위키목록</a> 에 &quot;아직 쓰지 않은 문서&quot; 로 모인다. 다음에 쓸 것이 저절로 쌓인다.</p>
+<p><code>[[이름]]</code> 으로 다른 문서를 부른다. 아직 없는 문서를 불러도 된다 — 오히려 그게 정상이다. 없는 문서는 다르게 표시되고, <a class="wiki new" href="%EC%9C%84%ED%82%A4%EB%AA%A9%EB%A1%9D">위키목록</a> 에 &quot;아직 쓰지 않은 문서&quot; 로 모인다. 다음에 쓸 것이 저절로 쌓인다.</p>
 <p>보이는 글자를 바꾸려면 <code>[[이름|글자]]</code> 로 쓴다.</p>
 <p>영어 이름은 c2 처럼 CamelCase 로 쓰면 대괄호 없이도 링크가 된다. 다만 우연히 그렇게 생긴 낱말이 많으므로, 문서가 실제로 있을 때만 링크로 그린다.</p>
 <h2 id="고쳐-쓴다">고쳐 쓴다</h2>
@@ -50,10 +50,10 @@
   
   <div class="backlinks">
     <span class="kicker">아직 쓰지 않은 문서</span>
-    <a class="new" href="../%EC%9C%84%ED%82%A4%EB%AA%A9%EB%A1%9D/">위키목록</a><a class="new" href="../CamelCase/">CamelCase</a>
+    <a class="new" href="%EC%9C%84%ED%82%A4%EB%AA%A9%EB%A1%9D">위키목록</a><a class="new" href="CamelCase">CamelCase</a>
   </div>
 </article>
 </main>
-<script src="../app.js" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>

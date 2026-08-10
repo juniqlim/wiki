@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseNote, blocksToText } from './site/md.js';
 import { orderNotes, slugFor } from './site/collect.js';
-import { renderHome, renderChanges, renderNote, renderWikiDoc, renderWikiIndex, noteUrl, wikiUrl } from './site/render.js';
+import { renderHome, renderChanges, renderNote, renderWikiDoc, renderWikiIndex, noteUrl, wikiUrl, wikiFile } from './site/render.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(root, 'docs');
@@ -94,16 +94,16 @@ for (const note of notes) {
 }
 
 for (const doc of docs) {
-  const ctx = { base: '../', urlOf: () => null, wikiUrlOf };
-  await write(doc.name + '/index.html', renderWikiDoc({
-    site: cfg.site, doc, ctx, base: '../',
+  const ctx = { base: '', urlOf: () => null, wikiUrlOf };
+  await write(wikiFile(doc.name), renderWikiDoc({
+    site: cfg.site, doc, ctx, base: '',
     backlinks: wikiBack.get(doc.name) || [],
     outgoing: doc.wikiLinks,
   }));
 }
 
-await write('wiki/index.html', renderWikiIndex({
-  site: cfg.site, docs, base: '../',
+await write('wiki.html', renderWikiIndex({
+  site: cfg.site, docs, base: '',
   wanted: [...wanted.entries()].map(([name, from]) => ({ name, from })).sort((a, b) => a.name.localeCompare(b.name, 'ko')),
 }));
 
