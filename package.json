@@ -5,6 +5,6 @@
   "scripts": {
     "build": "node build.js",
     "test": "node --test test/*.test.js",
-    "serve": "node build.js && npx -y serve dist"
+    "serve": "node build.js && npx -y serve docs"
   }
 }

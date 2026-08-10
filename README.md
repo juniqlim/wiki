@@ -4,7 +4,7 @@ md 파일을 정적 위키 사이트로 만든다. 런타임 의존성 없음.
 
 ## 빌드
 
-    node build.js        # → dist/
+    node build.js        # → docs/
 
 Node 18+ 만 필요하다. npm 패키지 없음.
 
@@ -14,14 +14,14 @@ Node 18+ 만 필요하다. npm 패키지 없음.
     programming/*.md     노트 원본 — 유일한 원천
     ai-agent/*.md
     investment/*.md
-    build.js             md 읽기 → 파싱 → dist/ 출력
+    build.js             md 읽기 → 파싱 → docs/ 출력
     site/md.js           마크다운 파서 (프론트매터·표·중첩 리스트·백링크용 링크 수집)
     site/collect.js      md 수집·정렬 (한글 파일명 NFC 정규화)
     site/render.js       AST → HTML, 페이지 레이아웃
     site/style.css       스타일 (다크 기본 / 라이트 토글)
     site/app.js          테마 토글 + 클라이언트 검색
     test/                단위 테스트 — npm test
-    dist/                배포물. Pages 로 올리므로 커밋한다
+    docs/                배포물. Pages 로 올리므로 커밋한다
 
 노트를 추가할 때는 폴더에 md 를 넣기만 하면 된다. `build.js` 가 폴더를 훑어
 자동으로 잡는다. 목록 맨 앞에 고정하고 싶을 때만 `site.json` 의 `order` 에 적는다.
@@ -47,12 +47,12 @@ Node 18+ 만 필요하다. npm 패키지 없음.
 
 ## 배포 (GitHub Pages)
 
-`dist/` 를 커밋해서 올린다. 노트를 고친 뒤:
+`docs/` 를 커밋해서 올린다. 노트를 고친 뒤:
 
     node build.js
     git add -A && git commit && git push
 
-GitHub 저장소 Settings → Pages 에서 소스를 `main` 브랜치 `/dist` 로 지정한다.
+GitHub 저장소 Settings → Pages 에서 소스를 `main` 브랜치 `/docs` 로 지정한다.
 
 ## 남은 일
 

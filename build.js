@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// md → dist/ 정적 사이트. 의존성 없음. 실행: node build.js
+// md → docs/ 정적 사이트. 의존성 없음. 실행: node build.js
 import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,7 +8,7 @@ import { orderNotes, slugFor } from './site/collect.js';
 import { renderHome, renderChanges, renderNote, noteUrl } from './site/render.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const out = path.join(root, 'dist');
+const out = path.join(root, 'docs');
 
 const cfg = JSON.parse(await readFile(path.join(root, 'site.json'), 'utf8'));
 const labelOf = (dir) => (cfg.folders.find((f) => f.dir === dir) || {}).label || dir;
@@ -73,4 +73,4 @@ await write('search.json', JSON.stringify(index));
 await cp(path.join(root, 'site/style.css'), path.join(out, 'style.css'));
 await cp(path.join(root, 'site/app.js'), path.join(out, 'app.js'));
 
-console.log('dist/ 생성 완료 — 노트 ' + notes.length + '편, 페이지 ' + (notes.length + 2) + '개');
+console.log('docs/ 생성 완료 — 노트 ' + notes.length + '편, 페이지 ' + (notes.length + 2) + '개');
