@@ -10,8 +10,13 @@ export function noteUrl(note) {
   return ['notes', ...dir.split('/'), name + '.html'].map(encodeURIComponent).join('/');
 }
 
+// 위키 문서 하나의 경로. 문서 이름이 곧 URL 이다 — 폴더도 날짜도 없다.
+export function wikiUrl(name) {
+  return encodeURIComponent(name) + '/';
+}
+
 // 내부 링크는 md 경로 → 실제 페이지 경로로. 대상이 없으면 링크를 풀어 텍스트로 남긴다.
-function inlineToHtml(nodes, ctx) {
+export function inlineToHtml(nodes, ctx) {
   return (nodes || []).map((n) => {
     if (n.t === 'text') return esc(n.v);
     if (n.t === 'br') return '<br>';
@@ -26,6 +31,14 @@ function inlineToHtml(nodes, ctx) {
         return '<a class="wiki" href="' + attr(ctx.base + url) + '">' + inner + '</a>';
       }
       return '<a class="ext" href="' + attr(n.href) + '" target="_blank" rel="noopener">' + inner + ' \u2197</a>';
+    }
+    if (n.t === 'wiki') {
+      const shown = esc(n.text || n.name);
+      const url = ctx.wikiUrlOf ? ctx.wikiUrlOf(n.name) : null;
+      if (url) return '<a class="wiki" href="' + attr(ctx.base + url) + '">' + shown + '</a>';
+      // CamelCase \ub294 \uc6b0\uc5f0\ud55c \ub0b1\ub9d0\uc77c \uc218 \uc788\uc73c\ub2c8 \ubb38\uc11c\uac00 \uc5c6\uc73c\uba74 \uadf8\ub0e5 \uae00\uc790\ub85c \ub454\ub2e4.
+      if (n.auto) return shown;
+      return '<a class="wiki new" href="' + attr(ctx.base + wikiUrl(n.name)) + '">' + shown + '</a>';
     }
     return '';
   }).join('');
@@ -77,6 +90,7 @@ function shell({ title, site, base, body, bodyClass = '' }) {
     <a class="brand" href="${base}index.html">${esc(site.title)}</a>
     <nav>
       <a href="${base}index.html">주제</a>
+      <a href="${base}wiki/">위키</a>
       <a href="${base}changes.html">최근 변경</a>
     </nav>
   </div>
@@ -133,9 +147,9 @@ export function renderChanges({ site, notes, labelOf, base = '' }) {
   });
 }
 
-export function renderNote({ site, note, notes, labelOf, base }) {
+export function renderNote({ site, note, notes, labelOf, base, wikiUrlOf = () => null }) {
   const byPath = new Map(notes.map((n) => [n.path, n]));
-  const ctx = { base, urlOf: (p) => (byPath.has(p) ? noteUrl(byPath.get(p)) : null) };
+  const ctx = { base, urlOf: (p) => (byPath.has(p) ? noteUrl(byPath.get(p)) : null), wikiUrlOf };
 
   const toc = note.toc.map((h) =>
     `<a class="toc-${h.level}" href="#${attr(h.id)}">${esc(h.text)}</a>`).join('');
@@ -172,5 +186,69 @@ export function renderNote({ site, note, notes, labelOf, base }) {
   ${body}
   ${backlinks}
 </article>`,
+  });
+}
+
+// 위키 문서 한 편. 노트와 달리 날짜도 폴더도 없다 — 이름과 연결만 있다.
+export function renderWikiDoc({ site, doc, ctx, base, backlinks, outgoing }) {
+  const body = doc.blocks.map((b) => blockToHtml(b, ctx)).join('\n');
+  const toc = doc.toc.map((h) => `<a class="toc-${h.level}" href="#${attr(h.id)}">${esc(h.text)}</a>`).join('');
+
+  const linkList = (names, kicker) => names.length ? `<div class="backlinks">
+    <span class="kicker">${esc(kicker)}</span>
+    ${names.map((n) => {
+      const url = ctx.wikiUrlOf(n);
+      return url
+        ? '<a href="' + attr(base + url) + '">' + esc(n) + '</a>'
+        : '<a class="new" href="' + attr(base + wikiUrl(n)) + '">' + esc(n) + '</a>';
+    }).join('')}
+  </div>` : '';
+
+  return shell({
+    title: doc.name + ' · ' + site.title, site, base, bodyClass: 'note-page',
+    body: `<aside class="rail">
+  <a class="mono back" href="${base}wiki/">← 위키</a>
+  ${toc ? '<span class="kicker">Contents</span><nav class="toc">' + toc + '</nav>' : ''}
+  <div class="stats mono">
+    <span>이 문서를 가리키는 곳 ${backlinks.length}</span>
+    <span>여기서 나가는 곳 ${outgoing.length}</span>
+  </div>
+</aside>
+<article>
+  <h1 class="wiki-name">${esc(doc.name)}</h1>
+  ${doc.title && doc.title !== doc.name ? '<p class="subtitle">' + esc(doc.title) + '</p>' : ''}
+  ${body}
+  ${linkList(backlinks, '이 문서를 가리키는 문서')}
+  ${linkList(outgoing.filter((n) => !ctx.wikiUrlOf(n)), '아직 쓰지 않은 문서')}
+</article>`,
+  });
+}
+
+// 위키 전체 목록. 아직 쓰지 않은 문서도 함께 보여준다 — 다음에 쓸 것이 보이게.
+export function renderWikiIndex({ site, docs, wanted, base }) {
+  const rows = docs.map((d) => `<a class="row" href="${attr(base + wikiUrl(d.name))}">
+      <span class="row-title">${esc(d.name)}</span>
+      ${d.summary ? '<span class="row-sum">' + esc(d.summary) + '</span>' : ''}
+    </a>`).join('');
+
+  const missing = wanted.map((w) => `<a class="row" href="${attr(base + wikiUrl(w.name))}">
+      <span class="row-title new">${esc(w.name)}</span>
+      <span class="row-sum">${esc(w.from.join(', '))} 에서 가리킴</span>
+    </a>`).join('');
+
+  return shell({
+    title: '위키 · ' + site.title, site, base, bodyClass: 'narrow',
+    body: `<h1>위키</h1>
+<p class="lede">개념 하나에 문서 하나. 이름이 곧 주소이고, <code>[[이름]]</code> 으로 서로를 부른다.</p>
+<div class="groups">
+  <section class="group">
+    <div class="group-head"><h2>문서</h2><span class="mono dim">${docs.length}</span></div>
+    <div class="rows">${rows || '<span class="dim">아직 없다.</span>'}</div>
+  </section>
+  ${wanted.length ? `<section class="group">
+    <div class="group-head"><h2>아직 쓰지 않은 문서</h2><span class="mono dim">${wanted.length}</span></div>
+    <div class="rows">${missing}</div>
+  </section>` : ''}
+</div>`,
   });
 }

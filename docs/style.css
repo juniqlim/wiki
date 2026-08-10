@@ -122,3 +122,8 @@ article th{font-weight:500;font-size:12px;letter-spacing:.04em;color:var(--muted
   .change{grid-template-columns:1fr auto}
   .change span:first-child{grid-column:1/-1}
 }
+
+/* 아직 쓰지 않은 문서로의 링크 — 위키에서는 이게 정상이고, 다음에 쓸 것을 가리킨다. */
+a.wiki.new,a.new,.row-title.new{color:var(--muted);border-bottom:1px dashed var(--rule)}
+a.wiki.new:hover,a.new:hover,.row-title.new:hover{color:var(--seed);border-bottom-color:var(--seed);text-decoration:none}
+h1.wiki-name{font-family:var(--mono);font-size:23px;letter-spacing:-.01em}

@@ -19,24 +19,30 @@ export function resolveHref(href, fromPath) {
   return { href, internal: false };
 }
 
-export function parseInline(text, fromPath) {
+// noAuto: 링크 글자 안에서는 CamelCase 를 위키워드로 잡지 않는다.
+export function parseInline(text, fromPath, opts = {}) {
   const out = [];
   let rest = decodeEntities(text);
   const push = (node) => { if (node) out.push(node); };
-  const re = /(\*\*([^*]+)\*\*)|(`([^`]+)`)|(\*([^*\n]+)\*)|(\[([^\]]*)\]\(([^)\s]+)\))|(https?:\/\/[^\s)<>"']+)/;
+  const re = /(\*\*([^*]+)\*\*)|(`([^`]+)`)|(\*([^*\n]+)\*)|(\[([^\]]*)\]\(([^)\s]+)\))|(https?:\/\/[^\s)<>"']+)|(\[\[([^\]|]+)(?:\|([^\]]+))?\]\])|([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)+)/;
   while (rest.length) {
     const m = rest.match(re);
     if (!m) { push({ t: "text", v: rest }); break; }
     if (m.index > 0) push({ t: "text", v: rest.slice(0, m.index) });
-    if (m[1]) push({ t: "strong", c: parseInline(m[2], fromPath) });
+    if (m[1]) push({ t: "strong", c: parseInline(m[2], fromPath, opts) });
     else if (m[3]) push({ t: "code", v: m[4] });
-    else if (m[5]) push({ t: "em", c: parseInline(m[6], fromPath) });
+    else if (m[5]) push({ t: "em", c: parseInline(m[6], fromPath, opts) });
     else if (m[7]) {
       const r = resolveHref(m[9], fromPath);
-      push({ t: "link", href: r.href, internal: r.internal, c: parseInline(m[8] || m[9], fromPath) });
+      push({ t: "link", href: r.href, internal: r.internal, c: parseInline(m[8] || m[9], fromPath, { noAuto: true }) });
     } else if (m[10]) {
       const r = resolveHref(m[10], fromPath);
       push({ t: "link", href: r.href, internal: r.internal, c: [{ t: "text", v: shortUrl(m[10]) }] });
+    } else if (m[11]) {
+      push({ t: "wiki", name: m[12].trim(), text: (m[13] || "").trim(), auto: false });
+    } else if (m[14]) {
+      if (opts.noAuto) push({ t: "text", v: m[14] });
+      else push({ t: "wiki", name: m[14], text: "", auto: true });
     }
     rest = rest.slice(m.index + m[0].length);
   }
@@ -177,12 +183,16 @@ export function parseNote(path, src) {
   const toc = blocks.filter((b) => b.type === "heading" && b.level >= 2 && b.level <= 3)
     .map((b) => ({ id: b.id, text: b.text, level: b.level }));
   const summary = meta.summary || autoSummary(blocks, title);
-  const links = collectLinks(blocks).filter((l) => l.internal).map((l) => l.href);
+  const refs = collectLinks(blocks);
+  const links = refs.filter((l) => l.t === "link" && l.internal).map((l) => l.href);
+  const wikiLinks = [...new Set(refs.filter((r) => r.t === "wiki").map((r) => r.name))];
+  // [[ ]] 로 직접 부른 것만. 자동 CamelCase 는 우연일 수 있어 '쓸 문서'로 세지 않는다.
+  const wikiCalls = [...new Set(refs.filter((r) => r.t === "wiki" && !r.auto).map((r) => r.name))];
   const chars = body.replace(/\s/g, "").length;
   const dateMatch = path.match(/(\d{4})-(\d{2})-(\d{2})/);
 
   return {
-    path, meta, title, titleOriginal, subtitle, source, blocks, toc, summary, links,
+    path, meta, title, titleOriginal, subtitle, source, blocks, toc, summary, links, wikiLinks, wikiCalls,
     folder: path.split("/")[0],
     slug: path.split("/").pop().replace(/\.md$/, "").replace(/^\d{4}-\d{2}-\d{2}-/, ""),
     date: meta.date || (dateMatch ? dateMatch[0] : ""),
@@ -237,7 +247,7 @@ export function blocksToText(blocks) {
 
 function collectLinks(blocks, acc = []) {
   const walkInline = (nodes) => nodes.forEach((n) => {
-    if (n.t === "link") acc.push(n);
+    if (n.t === "link" || n.t === "wiki") acc.push(n);
     if (n.c) walkInline(n.c);
   });
   blocks.forEach((b) => {
