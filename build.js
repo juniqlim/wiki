@@ -73,4 +73,7 @@ await write('search.json', JSON.stringify(index));
 await cp(path.join(root, 'site/style.css'), path.join(out, 'style.css'));
 await cp(path.join(root, 'site/app.js'), path.join(out, 'app.js'));
 
+// 빌드가 docs/를 지우므로 Pages 커스텀 도메인 표시를 매번 다시 쓴다.
+if (cfg.site.domain) await writeFile(path.join(out, 'CNAME'), cfg.site.domain + '\n');
+
 console.log('docs/ 생성 완료 — 노트 ' + notes.length + '편, 페이지 ' + (notes.length + 2) + '개');
