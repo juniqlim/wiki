@@ -33,8 +33,12 @@ export function inlineToHtml(nodes, ctx) {
       const inner = inlineToHtml(n.c, ctx);
       if (n.internal) {
         const url = ctx.urlOf(n.href);
-        if (!url) return '<span class="dead">' + inner + '</span>';
-        return '<a class="wiki" href="' + attr(ctx.base + url) + '">' + inner + '</a>';
+        if (url) return '<a class="wiki" href="' + attr(ctx.base + url) + '">' + inner + '</a>';
+        // 여기 없는 노트. 원래 주소가 있으면 그리로 보낸다 — 링크를 없애면 원본으로 갈 길이 끊긴다.
+        if (n.raw && /^https?:/.test(n.raw)) {
+          return '<a class="ext" href="' + attr(n.raw) + '" target="_blank" rel="noopener">' + inner + ' \u2197</a>';
+        }
+        return '<span class="dead">' + inner + '</span>';
       }
       return '<a class="ext" href="' + attr(n.href) + '" target="_blank" rel="noopener">' + inner + ' \u2197</a>';
     }

@@ -8,15 +8,16 @@ export function decodeEntities(s) {
   return s.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
 }
 
+// raw: 원래 주소. 가리킨 노트가 여기 없을 때 그리로 내보내기 위해 남겨 둔다.
 export function resolveHref(href, fromPath) {
   const m = href.match(REPO_BLOB);
-  if (m) return { href: decodeURIComponent(m[1]), internal: true };
+  if (m) return { href: decodeURIComponent(m[1]), internal: true, raw: href };
   if (/^\.{0,2}\/?[^:]+\.md(#.*)?$/.test(href) && !/^https?:/.test(href)) {
     const dir = fromPath.split("/").slice(0, -1).join("/");
     const clean = href.replace(/^\.\//, "");
-    return { href: clean.startsWith("/") ? clean.slice(1) : (dir ? dir + "/" + clean : clean), internal: true };
+    return { href: clean.startsWith("/") ? clean.slice(1) : (dir ? dir + "/" + clean : clean), internal: true, raw: href };
   }
-  return { href, internal: false };
+  return { href, internal: false, raw: href };
 }
 
 // noAuto: 링크 글자 안에서는 CamelCase 를 위키워드로 잡지 않는다.
@@ -34,10 +35,10 @@ export function parseInline(text, fromPath, opts = {}) {
     else if (m[5]) push({ t: "em", c: parseInline(m[6], fromPath, opts) });
     else if (m[7]) {
       const r = resolveHref(m[9], fromPath);
-      push({ t: "link", href: r.href, internal: r.internal, c: parseInline(m[8] || m[9], fromPath, { noAuto: true }) });
+      push({ t: "link", href: r.href, internal: r.internal, raw: r.raw, c: parseInline(m[8] || m[9], fromPath, { noAuto: true }) });
     } else if (m[10]) {
       const r = resolveHref(m[10], fromPath);
-      push({ t: "link", href: r.href, internal: r.internal, c: [{ t: "text", v: shortUrl(m[10]) }] });
+      push({ t: "link", href: r.href, internal: r.internal, raw: r.raw, c: [{ t: "text", v: shortUrl(m[10]) }] });
     } else if (m[11]) {
       push({ t: "wiki", name: m[12].trim(), text: (m[13] || "").trim(), auto: false });
     } else if (m[14]) {

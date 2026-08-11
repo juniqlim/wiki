@@ -46,8 +46,8 @@
 <h2 id="새로운-병목">새로운 병목</h2>
 <p>전통적인 개발에서 병목은 구현이었다. 구현코드/테스트코드를 구체적으로 어떻게 작성할지 생각하고, 타이핑하는데 시간이 걸렸다.<br>에이전틱 코딩에선 검증이 병목이다. 테스트, 코드리뷰는 물론 목적이 제대로 달성되었는지 확인하는 시간이 훨씬 오래걸린다.</p>
 <h2 id="루프-닫기-검증">루프 닫기, 검증</h2>
-<p>하루에 600개의 커밋을 머지하는, 이제 코드를 직접 작성하지 않는다고 하는 Peter Steinberger(OpenClaw 개발자)는 <span class="dead">인터뷰</span>에서 루프닫기(closing the loop)를 강조한다. 에이전트가 스스로 디버깅하고 테스트 할 수 있어야 한다. 에이전트에게 자신의 작업을 검증할 방법을 제공해야한다.</p>
-<p>마찬가지로 하루에 20개 넘는 PR을 제출하고, <a class="ext" href="https://x.com/bcherny/status/2015979257038831967" target="_blank" rel="noopener">AI가 자신의 코드 100%를 작성한다 ↗</a>고 말한 Boris Cherny(Claude Code 개발자)도, <span class="dead">X에 자신의 Claude Code 설정</span>을 이야기하며 에이전트에게 검증(Verification)할 방법을 제공하고 피드백 루프를 갖게 하라고 조언한다.</p>
+<p>하루에 600개의 커밋을 머지하는, 이제 코드를 직접 작성하지 않는다고 하는 Peter Steinberger(OpenClaw 개발자)는 <a class="ext" href="https://github.com/juniqlim/note/blob/master/programming/interview-iship-code-idont-read.md" target="_blank" rel="noopener">인터뷰 ↗</a>에서 루프닫기(closing the loop)를 강조한다. 에이전트가 스스로 디버깅하고 테스트 할 수 있어야 한다. 에이전트에게 자신의 작업을 검증할 방법을 제공해야한다.</p>
+<p>마찬가지로 하루에 20개 넘는 PR을 제출하고, <a class="ext" href="https://x.com/bcherny/status/2015979257038831967" target="_blank" rel="noopener">AI가 자신의 코드 100%를 작성한다 ↗</a>고 말한 Boris Cherny(Claude Code 개발자)도, <a class="ext" href="https://github.com/juniqlim/note/blob/master/programming/boris-claude-code-guide.md" target="_blank" rel="noopener">X에 자신의 Claude Code 설정 ↗</a>을 이야기하며 에이전트에게 검증(Verification)할 방법을 제공하고 피드백 루프를 갖게 하라고 조언한다.</p>
 <p>에이전트가 엄청나게 빠르게 작성해준 구현코드를 내가 직접 테스트하고 에이전트에 오류리포트 해주다보면, 이건 뭐가 잘못되었다는 것을 스스로 알게된다.</p>
 <h2 id="검증-가능한-단위로-작업하기">검증 가능한 단위로 작업하기</h2>
 <p>에이전트가 만들어 준 코드를 믿으려면, 검증이 가능 해야한다. 빠르게 검증하고 부족한 부분을 피드백하면 결과물이 빠르게 답에 가까워진다.<br>에이전트가 스스로 검증할 수 있게 환경을 만들어준다면, 에이전트는 사람이 흉내낼 수 없는 속도로 검증하고 피드백한다. 루프가 닫힌다.</p>
