@@ -4,32 +4,12 @@ import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseNote, blocksToText } from './site/md.js';
-import { orderNotes, slugFor } from './site/collect.js';
-import { renderHome, renderChanges, renderNote, renderWikiDoc, renderWikiIndex, renderRedirect, noteUrl, wikiUrl, wikiFile } from './site/render.js';
+import { renderWikiDoc, renderIndex, renderRedirect, wikiUrl, wikiFile } from './site/render.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(root, 'docs');
 
 const cfg = JSON.parse(await readFile(path.join(root, 'site.json'), 'utf8'));
-const labelOf = (dir) => (cfg.folders.find((f) => f.dir === dir) || {}).label || dir;
-
-// 폴더를 훑어 md를 모은다 — 목록을 손으로 관리하지 않는다.
-const found = [];
-for (const f of cfg.folders) {
-  const dir = path.join(root, f.dir);
-  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
-  for (const e of entries) {
-    if (e.isFile() && e.name.endsWith('.md')) found.push(f.dir + '/' + e.name);
-  }
-}
-
-const notes = [];
-for (const p of orderNotes(found, cfg.order)) {
-  const note = parseNote(p, await readFile(path.join(root, p), 'utf8'));
-  note.slug = slugFor(p, cfg.slugs) || note.meta.slug || '';
-  note.text = blocksToText(note.blocks);
-  notes.push(note);
-}
 
 // 위키 문서 — 파일명이 곧 문서 이름. 폴더도 날짜도 없다.
 const wikiDir = path.join(root, 'wiki');
@@ -60,32 +40,21 @@ const wikiUrlOf = (name) => {
   return aliasTo.has(n) ? wikiUrl(aliasTo.get(n)) : null;
 };
 
-// 위키 백링크 + 아직 쓰지 않은 문서
-const wikiBack = new Map();
+// 백링크 + 아직 쓰지 않은 문서
+const back = new Map();
 const wanted = new Map();
 for (const d of docs) {
   for (const target of d.wikiLinks) {
     const t = target.normalize('NFC');
     if (docNames.has(t)) {
-      if (!wikiBack.has(t)) wikiBack.set(t, []);
-      if (!wikiBack.get(t).includes(d.name)) wikiBack.get(t).push(d.name);
+      if (!back.has(t)) back.set(t, []);
+      if (!back.get(t).includes(d.name)) back.get(t).push(d.name);
     } else if (d.wikiCalls.includes(target)) {
       if (!wanted.has(t)) wanted.set(t, []);
       if (!wanted.get(t).includes(d.name)) wanted.get(t).push(d.name);
     }
   }
 }
-
-// 백링크
-const back = new Map();
-for (const n of notes) {
-  for (const t of n.links) {
-    if (!back.has(t)) back.set(t, []);
-    if (!back.get(t).includes(n.path)) back.get(t).push(n.path);
-  }
-}
-const known = new Set(notes.map((n) => n.path));
-for (const n of notes) n.backlinks = (back.get(n.path) || []).filter((p) => known.has(p));
 
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
@@ -96,47 +65,37 @@ const write = async (rel, html) => {
   await writeFile(dest, html, 'utf8');
 };
 
-await write('index.html', renderHome({ site: cfg.site, folders: cfg.folders, notes, base: '' }));
-await write('changes.html', renderChanges({ site: cfg.site, notes, labelOf, base: '' }));
-
-for (const note of notes) {
-  const rel = decodeURIComponent(noteUrl(note));
-  const base = '../'.repeat(rel.split('/').length - 1);
-  await write(rel, renderNote({ site: cfg.site, note, notes, labelOf, base, wikiUrlOf }));
-}
-
 for (const doc of docs) {
   const ctx = { base: '', urlOf: () => null, wikiUrlOf };
   await write(wikiFile(doc.name), renderWikiDoc({
     site: cfg.site, doc, ctx, base: '',
-    backlinks: wikiBack.get(doc.name) || [],
+    backlinks: back.get(doc.name) || [],
     outgoing: doc.wikiLinks,
   }));
 }
 
-for (const [alias, name] of aliasTo) await write(wikiFile(alias), renderRedirect(name));
+for (const [alias, name] of aliasTo) await write(wikiFile(alias), renderRedirect(wikiUrl(name), name));
 
-await write('wiki.html', renderWikiIndex({
+// 노트는 여기 있다가 제 사이트로 나갔다. 그때 주소로 나간 링크를 살려 둔다.
+const moved = cfg.moved || { to: '', paths: [] };
+for (const p of moved.paths) await write(p, renderRedirect(moved.to + p, moved.label));
+
+// 노트가 있던 시절의 두 페이지. 위키 목록은 첫 화면이 되었고, 최근 변경은 노트의 것이었다.
+for (const p of ['wiki.html', 'changes.html']) await write(p, renderRedirect('index.html', cfg.site.title));
+
+await write('index.html', renderIndex({
   site: cfg.site, docs, base: '',
   wanted: [...wanted.entries()].map(([name, from]) => ({ name, from })).sort((a, b) => a.name.localeCompare(b.name, 'ko')),
 }));
 
 // 검색 색인
-const index = notes.map((n) => ({
-  url: noteUrl(n),
-  title: n.title,
-  folder: labelOf(n.folder),
-  summary: n.summary,
-  text: n.text.replace(/\s+/g, ' ').slice(0, 4000),
-}));
-index.push(...docs.map((d) => ({
+await write('search.json', JSON.stringify(docs.map((d) => ({
   url: wikiUrl(d.name),
   title: d.name,
   folder: '위키',
   summary: d.summary,
   text: d.text.replace(/\s+/g, ' ').slice(0, 4000),
-})));
-await write('search.json', JSON.stringify(index));
+}))));
 
 await cp(path.join(root, 'site/style.css'), path.join(out, 'style.css'));
 await cp(path.join(root, 'site/app.js'), path.join(out, 'app.js'));
@@ -144,6 +103,7 @@ await cp(path.join(root, 'site/app.js'), path.join(out, 'app.js'));
 // 빌드가 docs/를 지우므로 Pages 커스텀 도메인 표시를 매번 다시 쓴다.
 if (cfg.site.domain) await writeFile(path.join(out, 'CNAME'), cfg.site.domain + '\n');
 
-console.log('docs/ 생성 완료 — 노트 ' + notes.length + '편, 위키 ' + docs.length + '편'
+console.log('docs/ 생성 완료 — 위키 ' + docs.length + '편'
   + (aliasTo.size ? ', 옛 이름 ' + aliasTo.size + '개' : '')
+  + (moved.paths.length ? ', 옮긴 노트 ' + moved.paths.length + '개' : '')
   + (wanted.size ? ', 아직 쓰지 않은 문서 ' + wanted.size + '개' : ''));

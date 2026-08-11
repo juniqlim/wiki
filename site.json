@@ -4,26 +4,23 @@
     "tagline": "저의 생각을 적은 위키입니다. 시간이 지나면서 제 생각이 바뀌는 것처럼, 위키의 내용은 변경될 수 있습니다.",
     "repo": "juniqlim/wiki",
     "branch": "main",
-    "domain": "wiki.juniq.im"
+    "domain": "wiki.juniq.im",
+    "sibling": { "label": "노트", "url": "https://note.juniq.im" }
   },
-  "folders": [
-    { "dir": "programming", "label": "프로그래밍" },
-    { "dir": "ai-agent", "label": "AI 에이전트" },
-    { "dir": "investment", "label": "투자" }
-  ],
-  "order": [
-    "programming/why-tdd.md",
-    "programming/2022-09-26-class-and-method-naming.md",
-    "programming/2023-02-01-what-really-matters-in-software.md",
-    "programming/2023-03-15-why-i-like-oop.md",
-    "programming/2023-06-01-caution-when-using-composition.md",
-    "programming/pomodoro-retrospective.md",
-    "programming/ron-estimation-is-evil.md",
-    "ai-agent/better-agentic-coding.md",
-    "ai-agent/my-ai-agent-practices.md",
-    "investment/투자판단모델.md"
-  ],
-  "slugs": {
-    "investment/투자판단모델.md": "investment-decision-model"
+  "moved": {
+    "to": "https://note.juniq.im/",
+    "label": "note.juniq.im",
+    "paths": [
+      "notes/ai-agent/better-agentic-coding.html",
+      "notes/ai-agent/my-ai-agent-practices.html",
+      "notes/investment/investment-decision-model.html",
+      "notes/programming/2022-09-26-class-and-method-naming.html",
+      "notes/programming/2023-02-01-what-really-matters-in-software.html",
+      "notes/programming/2023-03-15-why-i-like-oop.html",
+      "notes/programming/2023-06-01-caution-when-using-composition.html",
+      "notes/programming/pomodoro-retrospective.html",
+      "notes/programming/ron-estimation-is-evil.html",
+      "notes/programming/why-tdd.html"
+    ]
   }
 }
