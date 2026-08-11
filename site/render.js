@@ -21,6 +21,22 @@ export function wikiFile(name) {
   return name + '.html';
 }
 
+// 옛 이름 페이지. GitHub Pages 는 서버 리다이렉트가 없으므로 문서로 대신한다.
+export function renderRedirect(name) {
+  const url = wikiUrl(name);
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=${attr(url)}">
+<link rel="canonical" href="${attr(url)}">
+<title>${esc(name)}</title>
+</head>
+<body><p>이 문서는 <a href="${attr(url)}">${esc(name)}</a> 로 옮겼습니다.</p></body>
+</html>
+`;
+}
+
 // 내부 링크는 md 경로 → 실제 페이지 경로로. 대상이 없으면 링크를 풀어 텍스트로 남긴다.
 export function inlineToHtml(nodes, ctx) {
   return (nodes || []).map((n) => {

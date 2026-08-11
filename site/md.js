@@ -189,11 +189,13 @@ export function parseNote(path, src) {
   const wikiLinks = [...new Set(refs.filter((r) => r.t === "wiki").map((r) => r.name))];
   // [[ ]] 로 직접 부른 것만. 자동 CamelCase 는 우연일 수 있어 '쓸 문서'로 세지 않는다.
   const wikiCalls = [...new Set(refs.filter((r) => r.t === "wiki" && !r.auto).map((r) => r.name))];
+  // 이름을 바꾸면 옛 이름으로 나간 링크가 죽는다. 옛 이름을 여기 적어 두면 살려 둔다.
+  const aliases = (meta.aliases || "").split(",").map((a) => a.trim()).filter(Boolean);
   const chars = body.replace(/\s/g, "").length;
   const dateMatch = path.match(/(\d{4})-(\d{2})-(\d{2})/);
 
   return {
-    path, meta, title, titleOriginal, subtitle, source, blocks, toc, summary, links, wikiLinks, wikiCalls,
+    path, meta, title, titleOriginal, subtitle, source, blocks, toc, summary, links, wikiLinks, wikiCalls, aliases,
     folder: path.split("/")[0],
     slug: path.split("/").pop().replace(/\.md$/, "").replace(/^\d{4}-\d{2}-\d{2}-/, ""),
     date: meta.date || (dateMatch ? dateMatch[0] : ""),

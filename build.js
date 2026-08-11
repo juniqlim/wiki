@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseNote, blocksToText } from './site/md.js';
 import { orderNotes, slugFor } from './site/collect.js';
-import { renderHome, renderChanges, renderNote, renderWikiDoc, renderWikiIndex, noteUrl, wikiUrl, wikiFile } from './site/render.js';
+import { renderHome, renderChanges, renderNote, renderWikiDoc, renderWikiIndex, renderRedirect, noteUrl, wikiUrl, wikiFile } from './site/render.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(root, 'docs');
@@ -46,7 +46,19 @@ for (const e of wikiEntries) {
 docs.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
 const docNames = new Set(docs.map((d) => d.name));
-const wikiUrlOf = (name) => (docNames.has(name.normalize('NFC')) ? wikiUrl(name.normalize('NFC')) : null);
+// 옛 이름으로 불러도 본 문서로 간다. 문서 이름과 겹치는 별칭은 무시한다.
+const aliasTo = new Map();
+for (const d of docs) {
+  for (const a of d.aliases) {
+    const key = a.normalize('NFC');
+    if (!docNames.has(key) && !aliasTo.has(key)) aliasTo.set(key, d.name);
+  }
+}
+const wikiUrlOf = (name) => {
+  const n = name.normalize('NFC');
+  if (docNames.has(n)) return wikiUrl(n);
+  return aliasTo.has(n) ? wikiUrl(aliasTo.get(n)) : null;
+};
 
 // 위키 백링크 + 아직 쓰지 않은 문서
 const wikiBack = new Map();
@@ -102,6 +114,8 @@ for (const doc of docs) {
   }));
 }
 
+for (const [alias, name] of aliasTo) await write(wikiFile(alias), renderRedirect(name));
+
 await write('wiki.html', renderWikiIndex({
   site: cfg.site, docs, base: '',
   wanted: [...wanted.entries()].map(([name, from]) => ({ name, from })).sort((a, b) => a.name.localeCompare(b.name, 'ko')),
@@ -131,4 +145,5 @@ await cp(path.join(root, 'site/app.js'), path.join(out, 'app.js'));
 if (cfg.site.domain) await writeFile(path.join(out, 'CNAME'), cfg.site.domain + '\n');
 
 console.log('docs/ 생성 완료 — 노트 ' + notes.length + '편, 위키 ' + docs.length + '편'
+  + (aliasTo.size ? ', 옛 이름 ' + aliasTo.size + '개' : '')
   + (wanted.size ? ', 아직 쓰지 않은 문서 ' + wanted.size + '개' : ''));
