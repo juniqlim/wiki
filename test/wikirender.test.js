@@ -47,3 +47,4 @@ test('CamelCase 는 문서가 있을 때만 링크가 된다', () => {
   assert.doesNotMatch(html, /KentBeck<\/a>/);
   assert.match(html, /KentBeck/);
 });
+
