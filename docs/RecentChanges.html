@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>최근 변경 · 나의 위키</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{if(localStorage.getItem('theme')==='light')delete document.documentElement.dataset.theme}catch(e){}</script>
+</head>
+<body class="narrow">
+<header class="site-head">
+  <div class="head-left">
+    <a class="brand" href="index.html">나의 위키</a>
+    <nav>
+      <a href="index.html">문서</a>
+      <a href="RecentChanges">최근 변경</a>
+      <a class="ext" href="https://note.juniq.im">노트 ↗</a>
+    </nav>
+  </div>
+  <div class="head-right">
+    <input id="q" type="search" placeholder="검색 — 제목·본문" autocomplete="off" data-base="">
+    <button id="theme" type="button">라이트</button>
+  </div>
+</header>
+<div id="search-results" hidden></div>
+<main id="page">
+<div class="groups">
+  <section class="group">
+    <div class="group-head"><h2>최근 변경</h2><span class="mono dim">4</span></div>
+    <div class="rows"><a class="row" href="Agile">
+      <span class="row-title">Agile <span class="row-ko">애자일</span></span>
+      <span class="row-sum mono">2026-09-04</span>
+    </a><a class="row" href="ExtremeProgramming">
+      <span class="row-title">ExtremeProgramming <span class="row-ko">익스트림 프로그래밍</span></span>
+      <span class="row-sum mono">2026-09-04</span>
+    </a><a class="row" href="WardOnWikiAndProgramming">
+      <span class="row-title">WardOnWikiAndProgramming <span class="row-ko">워드가 말하는 위키와 프로그래밍의 닮은 점</span></span>
+      <span class="row-sum mono">2026-09-04</span>
+    </a><a class="row" href="WritingWiki">
+      <span class="row-title">WritingWiki</span>
+      <span class="row-sum mono">2026-08-11</span>
+    </a></div>
+  </section>
+</div>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

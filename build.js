@@ -4,7 +4,9 @@ import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseNote, blocksToText } from './site/md.js';
-import { renderWikiDoc, renderIndex, renderRedirect, wikiUrl, wikiFile } from './site/render.js';
+import { execFileSync } from 'node:child_process';
+import { renderWikiDoc, renderIndex, renderRedirect, renderChanges, wikiUrl, wikiFile } from './site/render.js';
+import { readHistory } from './site/history.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(root, 'docs');
@@ -24,6 +26,17 @@ for (const e of wikiEntries) {
   docs.push(doc);
 }
 docs.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+// 언제 고쳤는지는 git 이 안다.
+let history = new Map();
+try {
+  history = readHistory(execFileSync('git',
+    ['-c', 'core.quotePath=false', 'log', '--format=%cs', '--name-status', '--reverse', '-M', '--', 'wiki'],
+    { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }));
+} catch {
+  console.warn('git 이력을 읽지 못했다 — 최근 변경 없이 낸다.');
+}
+for (const d of docs) d.updated = (history.get(d.path) || {}).updated || '';
 
 const docNames = new Set(docs.map((d) => d.name));
 // 옛 이름으로 불러도 본 문서로 간다. 문서 이름과 겹치는 별칭은 무시한다.
@@ -76,12 +89,17 @@ for (const doc of docs) {
 
 for (const [alias, name] of aliasTo) await write(wikiFile(alias), renderRedirect(wikiUrl(name), name));
 
+const changes = docs.filter((d) => d.updated)
+  .sort((a, b) => b.updated.localeCompare(a.updated) || a.name.localeCompare(b.name, 'ko'));
+await write(wikiFile('RecentChanges'), renderChanges({ site: cfg.site, changes, base: '' }));
+
 // 노트는 여기 있다가 제 사이트로 나갔다. 그때 주소로 나간 링크를 살려 둔다.
 const moved = cfg.moved || { to: '', paths: [] };
 for (const p of moved.paths) await write(p, renderRedirect(moved.to + p, moved.label));
 
-// 노트가 있던 시절의 두 페이지. 위키 목록은 첫 화면이 되었고, 최근 변경은 노트의 것이었다.
-for (const p of ['wiki.html', 'changes.html']) await write(p, renderRedirect('index.html', cfg.site.title));
+// 노트가 있던 시절의 두 페이지 주소를 살려 둔다.
+await write('wiki.html', renderRedirect('index.html', cfg.site.title));
+await write('changes.html', renderRedirect('RecentChanges', '최근 변경'));
 
 await write('index.html', renderIndex({
   site: cfg.site, docs, base: '',

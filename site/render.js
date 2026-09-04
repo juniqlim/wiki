@@ -109,6 +109,7 @@ function shell({ title, site, base, body, bodyClass = '' }) {
     <a class="brand" href="${base}index.html">${esc(site.title)}</a>
     <nav>
       <a href="${base}index.html">문서</a>
+      <a href="${base}RecentChanges">최근 변경</a>
       ${site.sibling ? `<a class="ext" href="${attr(site.sibling.url)}">${esc(site.sibling.label)} ↗</a>` : ''}
     </nav>
   </div>
@@ -177,7 +178,6 @@ export function renderIndex({ site, docs, wanted, base }) {
   return shell({
     title: site.title, site, base, bodyClass: 'narrow',
     body: `<p class="tagline">${esc(site.tagline)}</p>
-<p class="lede">개념 하나에 문서 하나. 이름이 곧 주소이고, <code>[[이름]]</code> 으로 서로를 부른다.</p>
 <div class="groups">
   <section class="group">
     <div class="group-head"><h2>문서</h2><span class="mono dim">${docs.length}</span></div>
@@ -187,6 +187,23 @@ export function renderIndex({ site, docs, wanted, base }) {
     <div class="group-head"><h2>아직 쓰지 않은 문서</h2><span class="mono dim">${wanted.length}</span></div>
     <div class="rows">${missing}</div>
   </section>` : ''}
+</div>`,
+  });
+}
+
+// 최근 변경 — c2 의 RecentChanges. 위키가 살아 있는지는 여기서 보인다.
+export function renderChanges({ site, changes, base }) {
+  const rows = changes.map((c) => `<a class="row" href="${attr(base + wikiUrl(c.name))}">
+      <span class="row-title">${esc(c.name)}${c.title && c.title !== c.name ? ' <span class="row-ko">' + esc(c.title) + '</span>' : ''}</span>
+      <span class="row-sum mono">${esc(c.updated)}</span>
+    </a>`).join('');
+  return shell({
+    title: '최근 변경 · ' + site.title, site, base, bodyClass: 'narrow',
+    body: `<div class="groups">
+  <section class="group">
+    <div class="group-head"><h2>최근 변경</h2><span class="mono dim">${changes.length}</span></div>
+    <div class="rows">${rows || '<span class="dim">아직 없다.</span>'}</div>
+  </section>
 </div>`,
   });
 }
