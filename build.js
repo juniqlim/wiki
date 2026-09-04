@@ -53,19 +53,14 @@ const wikiUrlOf = (name) => {
   return aliasTo.has(n) ? wikiUrl(aliasTo.get(n)) : null;
 };
 
-// 백링크 + 아직 쓰지 않은 문서
+// 백링크
 const back = new Map();
-const wanted = new Map();
 for (const d of docs) {
   for (const target of d.wikiLinks) {
     const t = target.normalize('NFC');
-    if (docNames.has(t)) {
-      if (!back.has(t)) back.set(t, []);
-      if (!back.get(t).includes(d.name)) back.get(t).push(d.name);
-    } else if (d.wikiCalls.includes(target)) {
-      if (!wanted.has(t)) wanted.set(t, []);
-      if (!wanted.get(t).includes(d.name)) wanted.get(t).push(d.name);
-    }
+    if (!docNames.has(t)) continue;
+    if (!back.has(t)) back.set(t, []);
+    if (!back.get(t).includes(d.name)) back.get(t).push(d.name);
   }
 }
 
@@ -101,10 +96,7 @@ for (const p of moved.paths) await write(p, renderRedirect(moved.to + p, moved.l
 await write('wiki.html', renderRedirect('index.html', cfg.site.title));
 await write('changes.html', renderRedirect('RecentChanges', '최근 변경'));
 
-await write('index.html', renderIndex({
-  site: cfg.site, docs, base: '',
-  wanted: [...wanted.entries()].map(([name, from]) => ({ name, from })).sort((a, b) => a.name.localeCompare(b.name, 'ko')),
-}));
+await write('index.html', renderIndex({ site: cfg.site, docs, base: '' }));
 
 // 검색 색인
 await write('search.json', JSON.stringify(docs.map((d) => ({
@@ -123,5 +115,4 @@ if (cfg.site.domain) await writeFile(path.join(out, 'CNAME'), cfg.site.domain + 
 
 console.log('docs/ 생성 완료 — 위키 ' + docs.length + '편'
   + (aliasTo.size ? ', 옛 이름 ' + aliasTo.size + '개' : '')
-  + (moved.paths.length ? ', 옮긴 노트 ' + moved.paths.length + '개' : '')
-  + (wanted.size ? ', 아직 쓰지 않은 문서 ' + wanted.size + '개' : ''));
+  + (moved.paths.length ? ', 옮긴 노트 ' + moved.paths.length + '개' : ''));

@@ -163,16 +163,11 @@ export function renderWikiDoc({ site, doc, ctx, base, backlinks, outgoing }) {
   });
 }
 
-// 위키 전체 목록이 곧 첫 화면이다. 아직 쓰지 않은 문서도 함께 보여준다 — 다음에 쓸 것이 보이게.
-export function renderIndex({ site, docs, wanted, base }) {
+// 위키 전체 목록이 곧 첫 화면이다.
+export function renderIndex({ site, docs, base }) {
   const rows = docs.map((d) => `<a class="row" href="${attr(base + wikiUrl(d.name))}">
       <span class="row-title">${esc(d.name)}${d.title && d.title !== d.name ? ' <span class="row-ko">' + esc(d.title) + '</span>' : ''}</span>
       ${d.summary ? '<span class="row-sum">' + esc(d.summary) + '</span>' : ''}
-    </a>`).join('');
-
-  const missing = wanted.map((w) => `<a class="row" href="${attr(base + wikiUrl(w.name))}">
-      <span class="row-title new">${esc(w.name)}</span>
-      <span class="row-sum">${esc(w.from.join(', '))} 에서 가리킴</span>
     </a>`).join('');
 
   return shell({
@@ -183,10 +178,6 @@ export function renderIndex({ site, docs, wanted, base }) {
     <div class="group-head"><h2>문서</h2><span class="mono dim">${docs.length}</span></div>
     <div class="rows">${rows || '<span class="dim">아직 없다.</span>'}</div>
   </section>
-  ${wanted.length ? `<section class="group">
-    <div class="group-head"><h2>아직 쓰지 않은 문서</h2><span class="mono dim">${wanted.length}</span></div>
-    <div class="rows">${missing}</div>
-  </section>` : ''}
 </div>`,
   });
 }
