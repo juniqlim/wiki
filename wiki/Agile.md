@@ -3,6 +3,12 @@ title: 애자일
 ---
 2001년 선언으로 이름 붙은 일하는 방식. 계획대로 만드는 대신, 짧게 만들어 보여주고 고친다.
 
+마틴 파울러가 [100자 안에 정의한 것](https://x.com/martinfowler/status/424231727209254912)이 가장 짧다.
+
+> (People-first > process-first) + (Adaptive planning > predictive planning)
+
+사람이 프로세스보다 먼저이고, 계획은 예측이 아니라 적응이다. 아래 네 가지 가치는 이 둘을 풀어 쓴 것이다.
+
 ## 이름보다 부모가 먼저다
 
 애자일은 방법론이 아니다. 1990년대에 폭포수에 맞서 따로 자라던 XP, 스크럼, 크리스탈, DSDM 같은 가벼운 방법론의 대표 17명이 2001년에 모여 공통점을 적은 것이 [애자일 선언](https://agilemanifesto.org/)이다. 후보 이름 하나가 Adaptive 였다.
