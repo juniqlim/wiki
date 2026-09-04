@@ -82,6 +82,4 @@ aliases: 워드가말하는위키와프로그래밍의닮은점
 | [[CommunityTeaches]] | 공동체가 언어를 가르친다 | 위키가 그 공동체를 만든다 |
 | [[WrestlingIsLearning]] | 설계 논쟁 | 토론 페이지 |
 
-출처: Computer History Museum, "Wiki Inventor Ward Cunningham with John Gage" (2008-01-25)
-https://www.youtube.com/watch?v=bx6nNqSASGo
-번역: https://note.juniq.im/notes/programming/ward/wiki-ward-cunningham-john-gage-2008.html
+[대담 영상](https://www.youtube.com/watch?v=bx6nNqSASGo)
