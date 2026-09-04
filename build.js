@@ -78,7 +78,8 @@ for (const doc of docs) {
   await write(wikiFile(doc.name), renderWikiDoc({
     site: cfg.site, doc, ctx, base: '',
     backlinks: back.get(doc.name) || [],
-    outgoing: doc.wikiLinks,
+    // 자동 CamelCase 는 우연일 수 있어, 문서가 있을 때만 나가는 곳으로 센다.
+    outgoing: doc.wikiLinks.filter((n) => docNames.has(n.normalize('NFC')) || doc.wikiCalls.includes(n)),
   }));
 }
 
