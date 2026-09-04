@@ -165,7 +165,7 @@ export function renderWikiDoc({ site, doc, ctx, base, backlinks, outgoing }) {
 // 위키 전체 목록이 곧 첫 화면이다. 아직 쓰지 않은 문서도 함께 보여준다 — 다음에 쓸 것이 보이게.
 export function renderIndex({ site, docs, wanted, base }) {
   const rows = docs.map((d) => `<a class="row" href="${attr(base + wikiUrl(d.name))}">
-      <span class="row-title">${esc(d.name)}</span>
+      <span class="row-title">${esc(d.name)}${d.title && d.title !== d.name ? ' <span class="row-ko">' + esc(d.title) + '</span>' : ''}</span>
       ${d.summary ? '<span class="row-sum">' + esc(d.summary) + '</span>' : ''}
     </a>`).join('');
 

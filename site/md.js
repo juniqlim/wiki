@@ -160,7 +160,7 @@ export function parseNote(path, src) {
   const rawTitle = h1At >= 0 ? lines[h1At].replace(/^#\s+/, "").trim() : path.split("/").pop().replace(/\.md$/, "");
 
   // 제목: "한글 (English)" → 원제 분리 / " - 부제" → 부제 분리
-  let title = rawTitle, titleOriginal = "", subtitle = meta.subtitle || "";
+  let title = meta.title || rawTitle, titleOriginal = "", subtitle = meta.subtitle || "";
   const dash = title.match(/^(.*?)\s+[-–—]\s+(.+)$/);
   if (dash) { title = dash[1].trim(); subtitle = subtitle || dash[2].trim(); }
   const paren = title.match(/^(.*?)\s*\(([^)]+)\)\s*$/);

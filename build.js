@@ -91,7 +91,7 @@ await write('index.html', renderIndex({
 // 검색 색인
 await write('search.json', JSON.stringify(docs.map((d) => ({
   url: wikiUrl(d.name),
-  title: d.name,
+  title: d.title && d.title !== d.name ? d.name + ' · ' + d.title : d.name,
   folder: '위키',
   summary: d.summary,
   text: d.text.replace(/\s+/g, ' ').slice(0, 4000),

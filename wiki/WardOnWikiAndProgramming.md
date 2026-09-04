@@ -1,8 +1,9 @@
 ---
+title: 워드가 말하는 위키와 프로그래밍의 닮은 점
 aliases: 워드가말하는위키와프로그래밍의닮은점
 ---
 워드 커닝햄은 위키를 만든 사람이고 CRC 카드와 패턴을 만든 사람이다.
-2008년 컴퓨터 역사박물관 대담에서 그는 위키와 프로그래밍을 같은 자리에서 이야기했다.
+[2008년 컴퓨터 역사박물관 대담](https://note.juniq.im/notes/programming/ward/wiki-ward-cunningham-john-gage-2008.html)에서 그는 위키와 프로그래밍을 같은 자리에서 이야기했다.
 아래는 그가 한 말이다.
 
 ## 읽는 깊이는 읽는 사람이 고른다
@@ -83,4 +84,4 @@ aliases: 워드가말하는위키와프로그래밍의닮은점
 
 출처: Computer History Museum, "Wiki Inventor Ward Cunningham with John Gage" (2008-01-25)
 https://www.youtube.com/watch?v=bx6nNqSASGo
-번역: https://github.com/juniqlim/note/blob/master/programming/ward/wiki-ward-cunningham-john-gage-2008.md
+번역: https://note.juniq.im/notes/programming/ward/wiki-ward-cunningham-john-gage-2008.html
