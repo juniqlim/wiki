@@ -2,6 +2,10 @@
 title: 객체지향
 aliases: OO, OOP
 ---
+위임하는 것. 결과적으로 협업이 된다. 데이터를 가져와서 처리하는건 OO라 하기 어렵다.
+
+---
+
 > 60년대에 그 용어를 너무 가볍게 정했습니다. "메시지 지향(message oriented)" 같은 것을 골랐어야 했습니다.
 >
 > — [앨런 케이, 2011년](https://note.juniq.im/notes/programming/alan/2023-03-17-alan-kay-oop.html)
