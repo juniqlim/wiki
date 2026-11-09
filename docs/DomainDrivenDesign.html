@@ -39,8 +39,14 @@
 <article>
   <h1 class="wiki-name">DomainDrivenDesign</h1>
   <p class="subtitle">도메인 주도 설계</p>
-  <p>에릭 에반스가 2003년 책 『도메인 주도 설계』로 이름 붙인 설계 방식. 소프트웨어 구조를 도메인에 대한 이해와 맞춘다.</p>
-<p>도메인을 그림으로 그리는 방법이 아니다. 도메인을 어떻게 생각하고, 어떤 언어로 말하고, 나아지는 이해를 반영하도록 소프트웨어를 어떻게 구성할지에 관한 것이다. 이해는 프로젝트 끝에서도 생기므로 리팩터링이 큰 몫을 한다(<a class="ext" href="https://note.juniq.im/notes/programming/2023-03-02-ddd-book-praise-for-translation.html" target="_blank" rel="noopener">랄프 존슨 ↗</a>). 워드의 <a class="ext" href="https://note.juniq.im/notes/programming/ward/ward-debt-metaphor.html" target="_blank" rel="noopener">부채 은유 ↗</a>와 같은 이야기다.</p>
+  <p>이 책의 교훈 두 가지는</p>
+<ul><li>개념과 구현을 분리하지 마라.</li><li>설계와 구현을 분리하지 마라.</li></ul>
+<p><a class="ext" href="https://note.juniq.im/notes/programming/ddd-book-excerpts.html" target="_blank" rel="noopener">마틴 파울러가 추천사 ↗</a>에서 한 말.</p>
+<p>에반스가 머리말에서 핵심으로 꼽은 장(2, 3, 9, 14장) 중 2장 유비쿼터스 언어와 3장 모델 주도 설계를 위 두 문장이 담는다. 나머지는</p>
+<ul><li>9장 암시적인 개념을 명확하게(Making Implicit Concepts Explicit): 숨은 개념을 드러내라.</li><li>14장 모델의 무결성 유지(Maintaining Model Integrity): 모델이 통하는 경계를 정하라.</li></ul>
+<hr>
+<p>에릭 에반스가 2003년 책 『도메인 주도 설계』로 이름 붙인 설계 방식. 소프트웨어 구조를 도메인에 대한 이해와 맞춘다.</p>
+<p>도메인을 어떻게 생각하고, 어떤 언어로 말하고, 나아지는 이해를 반영하도록 소프트웨어를 어떻게 구성할지에 관한 것이다. 이해는 프로젝트 끝에서도 생기므로 리팩터링이 큰 몫을 한다(<a class="ext" href="https://note.juniq.im/notes/programming/2023-03-02-ddd-book-praise-for-translation.html" target="_blank" rel="noopener">랄프 존슨 ↗</a>). 워드의 <a class="ext" href="https://note.juniq.im/notes/programming/ward/ward-debt-metaphor.html" target="_blank" rel="noopener">부채 은유 ↗</a>와 같은 이야기다.</p>
 <p>에반스는 <a class="wiki" href="ExtremeProgramming">XP</a>의 지지자였고 DDD를 XP의 자연스러운 구성요소로 봤다. 책의 전략적 설계 내내 반복 주기, 도메인 전문가와 함께하는 팀, 지속적 통합, 리팩터링이 나온다.</p>
 <p><a class="ext" href="https://martinfowler.com/bliki/DomainDrivenDesign.html" target="_blank" rel="noopener">마틴 파울러 ↗</a>는 특히 중요한 부분으로 <a class="ext" href="https://note.juniq.im/notes/programming/2023-02-05-ddd-strategic-design-summary.html" target="_blank" rel="noopener">전략적 설계 ↗</a>를 꼽는다. 큰 도메인을 바운디드 컨텍스트(bounded context)들의 관계로 나누는 것이다.</p>
 <p>워드 커닝햄은 책의 리뷰어였다. 엔티티, 밸류 오브젝트 같은 전술적 패턴은 핵심이 아니니 부록으로 옮기라고 조언했다. 반대로 리팩터링을 잘하면 하나의 언어로 충분하다고 믿어 바운디드 컨텍스트는 무시했는데, 훗날 <a class="ext" href="https://note.juniq.im/notes/programming/ward/ward-observation-of-emergent-schema.html" target="_blank" rel="noopener">에릭이 맞았다고 인정했다 ↗</a>.</p>
