@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseNote, blocksToText } from './site/md.js';
 import { execFileSync } from 'node:child_process';
-import { renderWikiDoc, renderIndex, renderRedirect, renderChanges, wikiUrl, wikiFile } from './site/render.js';
+import { renderWikiDoc, renderIndex, renderRedirect, renderChanges, wikiUrl, wikiFile, movedDocPages } from './site/render.js';
 import { readHistory } from './site/history.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -92,6 +92,7 @@ await write(wikiFile('RecentChanges'), renderChanges({ site: cfg.site, changes, 
 // 노트는 여기 있다가 제 사이트로 나갔다. 그때 주소로 나간 링크를 살려 둔다.
 const moved = cfg.moved || { to: '', paths: [] };
 for (const p of moved.paths) await write(p, renderRedirect(moved.to + p, moved.label));
+for (const p of movedDocPages(moved.docs || {}, moved.label)) await write(p.file, p.html);
 
 // 노트가 있던 시절의 두 페이지 주소를 살려 둔다.
 await write('wiki.html', renderRedirect('index.html', cfg.site.title));

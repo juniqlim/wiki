@@ -14,6 +14,11 @@ export function wikiFile(name) {
   return name + '.html';
 }
 
+// 노트로 옮긴 위키 문서 — 문서 이름(과 옛 이름) 주소에 노트로 가는 페이지를 남긴다.
+export function movedDocPages(docs, label) {
+  return Object.entries(docs).map(([name, url]) => ({ file: wikiFile(name), html: renderRedirect(url, label) }));
+}
+
 // 옮긴 자리에 남기는 페이지. GitHub Pages 는 서버 리다이렉트가 없으므로 문서로 대신한다.
 // 이름을 바꾼 위키 문서에도, 노트 사이트로 나간 옛 노트 주소에도 같은 장치를 쓴다.
 export function renderRedirect(url, label) {

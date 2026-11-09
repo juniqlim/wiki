@@ -10,6 +10,10 @@
   "moved": {
     "to": "https://note.juniq.im/",
     "label": "note.juniq.im",
+    "docs": {
+      "WardOnWikiAndProgramming": "https://note.juniq.im/notes/programming/ward/ward-on-wiki-and-programming.html",
+      "워드가말하는위키와프로그래밍의닮은점": "https://note.juniq.im/notes/programming/ward/ward-on-wiki-and-programming.html"
+    },
     "paths": [
       "notes/ai-agent/better-agentic-coding.html",
       "notes/ai-agent/my-ai-agent-practices.html",
