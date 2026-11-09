@@ -2,7 +2,15 @@
 title: 익스트림 프로그래밍
 aliases: XP
 ---
-> 저는 **분산되고 지속적인 설계(distributed and continuous design)** 가 XP의 핵심에 가깝다고 생각합니다. 객체(objects)로 가능해지고, 단순함(simplicity)과 짝(dual)을 이루며, 소통(communication)과 테스트(testing)라는 다른 가치들의 동기가 됩니다. 하지만 이건 제가 XP에서 가장 흥미롭게 여기는 면일 뿐입니다.
+30분에 한번 운영환경에 deploy 가능한 동작하는 프로그램을 만드는 것. 그보다 더 짧아도 좋다 현재 시국에는.
+
+---
+
+> 저는 **나노 단위의 증분(NanoIncrements)** 이 XP의 핵심에 가깝거나, 어쩌면 그 자체라고 생각합니다. 나노 단위의 증분은 변화에 대비하기도 하지만, (우리 중 일부에게는) 놀라운 경제적 의미도 담고 있습니다. 증분이 그렇게 짧아도 여전히 경제적일 수 있다는 점입니다.
+>
+> — [앨리스터 코오번](https://note.juniq.im/notes/programming/ward/ward-core-of-xp.html)
+
+> 저는 **분산되고 지속적인 설계(distributed and continuous design)** 가 XP의 핵심에 가깝다고 생각합니다. 객체(objects)로 가능해지고, 단순함(simplicity)과 짝(dual)을 이루며, 소통(communication)과 테스트(testing)라는 다른 가치들의 동기가 됩니다. 하지만 이건 제가 XP에서 가장 흥미롭게 여기는 면일 뿐입니다. (어쩌면 우리는 같은 말을 하고 있는 걸까요?)
 >
 > — [워드 커닝햄](https://note.juniq.im/notes/programming/ward/ward-core-of-xp.html)
 
