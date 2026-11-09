@@ -6,7 +6,7 @@ aliases: XP
 >
 > — [워드 커닝햄](https://note.juniq.im/notes/programming/ward/ward-core-of-xp.html)
 
-켄트 벡이 1996년 크라이슬러 급여 시스템(C3) 프로젝트에서 만든 경량 방법론. 론 제프리스가 코치로 함께했다. 실천의 상당수는 그전에 워드 커닝햄과 함께 다듬은 것이다.
+켄트 벡이 1996년 크라이슬러 급여 시스템(C3) 프로젝트에서 만든 경량 방법론. [론 제프리스](https://wiki.c2.com/?TheThreeExtremos)가 코치로 함께했다. 실천의 상당수는 그전에 [워드 커닝햄](https://wiki.c2.com/?TheThreeExtremos)과 함께 다듬은 것이다.
 
 좋다고 알려진 실천을 극단까지 밀었다.
 
