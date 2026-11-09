@@ -2,7 +2,11 @@
 title: 익스트림 프로그래밍
 aliases: XP
 ---
-켄트 벡이 1996년 크라이슬러 급여 시스템(C3) 프로젝트에서 만든 경량 방법론. 워드 커닝햄, 론 제프리스가 함께했다.
+> 저는 **분산되고 지속적인 설계(distributed and continuous design)** 가 XP의 핵심에 가깝다고 생각합니다. 객체(objects)로 가능해지고, 단순함(simplicity)과 짝(dual)을 이루며, 소통(communication)과 테스트(testing)라는 다른 가치들의 동기가 됩니다. 하지만 이건 제가 XP에서 가장 흥미롭게 여기는 면일 뿐입니다.
+>
+> — [워드 커닝햄](https://note.juniq.im/notes/programming/ward/ward-core-of-xp.html)
+
+켄트 벡이 1996년 크라이슬러 급여 시스템(C3) 프로젝트에서 만든 경량 방법론. 론 제프리스가 코치로 함께했다. 실천의 상당수는 그전에 워드 커닝햄과 함께 다듬은 것이다.
 
 좋다고 알려진 실천을 극단까지 밀었다.
 
