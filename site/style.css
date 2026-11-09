@@ -34,8 +34,6 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 main{padding:64px 40px 80px}
 body.narrow main{max-width:760px}
 h1{margin:0;font-family:var(--serif);font-size:26px;font-weight:600}
-.tagline{margin:0 0 10px;max-width:44ch;font-family:var(--serif);font-size:18px;line-height:1.8;
-  color:var(--muted);text-wrap:pretty}
 .lede{margin:8px 0 30px;max-width:46ch;font-size:14px;line-height:1.7;color:var(--muted)}
 
 .groups{display:flex;flex-direction:column;gap:44px;margin-top:48px;padding-top:40px;border-top:1px solid var(--rule)}

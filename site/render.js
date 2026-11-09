@@ -178,8 +178,7 @@ export function renderIndex({ site, docs, base }) {
 
   return shell({
     title: site.title, site, base, bodyClass: 'narrow',
-    body: `<p class="tagline">${esc(site.tagline)}</p>
-<div class="groups">
+    body: `<div class="groups">
   <section class="group">
     <div class="group-head"><h2>문서</h2><span class="mono dim">${docs.length}</span></div>
     <div class="rows">${rows || '<span class="dim">아직 없다.</span>'}</div>
