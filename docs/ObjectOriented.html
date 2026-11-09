@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ObjectOriented · 나의 위키</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{if(localStorage.getItem('theme')==='light')delete document.documentElement.dataset.theme}catch(e){}</script>
+</head>
+<body class="note-page">
+<header class="site-head">
+  <div class="head-left">
+    <a class="brand" href="index.html">나의 위키</a>
+    <nav>
+      <a class="home" href="https://juniq.im/">← juniq</a>
+      <a href="index.html">문서</a>
+      <a href="RecentChanges">최근 변경</a>
+      <a class="ext" href="https://note.juniq.im">노트 ↗</a>
+    </nav>
+  </div>
+  <div class="head-right">
+    <input id="q" type="search" placeholder="검색 — 제목·본문" autocomplete="off" data-base="">
+    <button id="theme" type="button">라이트</button>
+  </div>
+</header>
+<div id="search-results" hidden></div>
+<main id="page">
+<aside class="rail">
+  <a class="mono back" href="index.html">← 문서</a>
+  <span class="kicker">Contents</span><nav class="toc"><a class="toc-2" href="#흔히-아는-객체지향">흔히 아는 객체지향</a><a class="toc-2" href="#앨런-케이는-객체지향을-왜-만들었나">앨런 케이는 객체지향을 왜 만들었나</a><a class="toc-2" href="#앨런-케이의-객체지향">앨런 케이의 객체지향</a><a class="toc-2" href="#둘의-차이">둘의 차이</a></nav>
+  <div class="stats mono">
+    <span>이 문서를 가리키는 곳 0</span>
+    <span>여기서 나가는 곳 0</span>
+  </div>
+</aside>
+<article>
+  <h1 class="wiki-name">ObjectOriented</h1>
+  <p class="subtitle">객체지향</p>
+  <blockquote><p>60년대에 그 용어를 너무 가볍게 정했습니다. &quot;메시지 지향(message oriented)&quot; 같은 것을 골랐어야 했습니다.</p><p>— <a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-03-17-alan-kay-oop.html" target="_blank" rel="noopener">앨런 케이, 2011년 ↗</a></p></blockquote>
+<p>앨런 케이가 1966년 &quot;객체 지향 프로그래밍&quot;이라는 이름을 만들었다. 지금 흔히 객체지향이라 부르는 것과 그가 뜻한 것은 다르다.</p>
+<h2 id="흔히-아는-객체지향">흔히 아는 객체지향</h2>
+<p>클래스로 데이터와 그 데이터를 다루는 함수를 묶는다. 보통 캡슐화, 상속, 다형성, 추상화 넷을 꼽는다. C++와 자바로 주류가 됐다.</p>
+<p>뿌리는 두 갈래다. 시뮬라(Simula, 1967)가 클래스, 객체, 상속을 처음 넣었다. 추상 데이터 타입(abstract data type) 연구는 데이터 구조를 감추고 연산만 공개하는 방식을 줬다. 앨런 케이도 <a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-03-17-alan-kay-oop.html" target="_blank" rel="noopener">추상 데이터 타입 갈래가 훨씬 더 많은 주목을 받았다 ↗</a>고 했다.</p>
+<h2 id="앨런-케이는-객체지향을-왜-만들었나">앨런 케이는 객체지향을 왜 만들었나</h2>
+<blockquote><p>1966년 11월에 저를 강타한 생각은 터무니없을 정도로 단순했습니다. &quot;서로 통신할 수 있는 컴퓨터가 충분히 있다면, 컴퓨터로 할 수 있는 그 어떤 것이든 정의하는 데 이것만 있으면 된다.&quot;</p><p>— <a class="ext" href="https://note.juniq.im/notes/programming/alan/alan-what-thought-process-would-lead-one-to-invent-object-oriented-programming.html" target="_blank" rel="noopener">앨런 케이, 2020년 ↗</a></p></blockquote>
+<ul><li>프로세스들의 시스템을 쉽게 정의하고 싶었다. 어떤 종류의 프로세스로 된 어떤 종류의 시스템이든.</li><li>프로시저와 데이터 구조를 구성 요소로 쓰는 것보다 확장이 잘 되고, 깔끔하고, 시스템 전체를 설계하기 좋았다.</li><li>데이터의 추한 속성을 고치는 데서 그치지 않고 없앨 수 있었다. 그는 &quot;데이터라는 아이디어는 항상 좋지 않았다&quot;고 했다.</li></ul>
+<h2 id="앨런-케이의-객체지향">앨런 케이의 객체지향</h2>
+<blockquote><p>오래전에 이 주제에 '객체(objects)'라는 용어를 만든 것이 유감입니다. 많은 사람이 더 작은 아이디어에 집중하게 만들었기 때문입니다. 큰 아이디어는 '메시징(messaging)'입니다.</p><p>— <a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-03-17-alan-kay-oop.html" target="_blank" rel="noopener">앨런 케이, 1998년 ↗</a></p></blockquote>
+<blockquote><p>저에게 OOP는 오직 메시징, 상태-프로세스의 지역 보존·보호·은닉, 모든 것의 극단적인 늦은 바인딩(late-binding)입니다.</p><p>— <a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-03-17-alan-kay-oop.html" target="_blank" rel="noopener">앨런 케이, 2003년 ↗</a></p></blockquote>
+<ul><li>객체는 서로 메시지를 주고받는 컴퓨터다. 생물학의 세포, 네트워크의 컴퓨터와 닮았다.</li><li>명령(setter)이 아니라 목표를 요청한다. 그러면 캡슐화와 느슨한 결합이 저절로 따라온다.</li><li>상속 대신 위임을 썼다. '다형성'은 그들이 만든 말이 아니고, generic messages라 불렀다(<a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-06-01-alan&#39;s-comment-in-alan-wrong-article.html" target="_blank" rel="noopener">댓글 모음 ↗</a>).</li><li>스몰토크와 LISP에서 가능하다고 했다.</li></ul>
+<h2 id="둘의-차이">둘의 차이</h2>
+<p>흔한 객체지향은 데이터 구조와 프로시저를 클래스로 묶은 것에 가깝다. 앨런 케이는 바로 그 데이터 구조와 프로시저를 없애려고 객체를 썼다.</p>
+<p>갈림길은 명령이냐 요청이냐다. 앨런 케이의 <a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-06-01-alan&#39;s-comment-in-alan-wrong-article.html" target="_blank" rel="noopener">댓글 ↗</a>을 모아 보면, 비슷한 뜻으로 쓰이는 말이 두 묶음으로 나뉜다.</p>
+<ul><li>명령: setter, 데이터, 추상 데이터 타입, 구조체와 프로시저, 대입문, 전통적 프로그래밍</li><li>요청(선언): 메시징, 서비스, 캡슐화, 느슨한 결합, 객체, 모듈</li></ul>
+<p>앨런 케이가 직접 꼽은 예는 setter다. setter는 어떤 객체든 누구나 명령으로 주무를 수 있는 데이터 구조로 되돌린다.</p>
+<p><a class="ext" href="https://note.juniq.im/notes/programming/alan/2023-06-06-alan&#39;s-oop-practices-in-java.html" target="_blank" rel="noopener">자바에 적용해 본 것 ↗</a>: setter 금지, 인스턴스 필드는 final, 공개 메서드의 요청과 응답을 단순하게.</p>
+  
+  
+</article>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>
